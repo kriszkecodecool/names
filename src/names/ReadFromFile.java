@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -23,6 +24,7 @@ public class ReadFromFile {
 				Human human = new Human(splited[0], Integer.parseInt(splited[1]));
 				humanlist.add(human);
 			}
+			in.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,16 +40,34 @@ public class ReadFromFile {
 		return set.size();
 	}
 
+	public static void writeToFile(List<Human> humanlist, File file) {
+		List<String> lines = new ArrayList<String>();
+		for (Human human : humanlist) {
+			lines.add(human.toString());
+		}
+		try {
+			PrintWriter pw = new PrintWriter(file);
+			for (String string : lines) {
+				pw.write(string + "\n");
+			}
+			pw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
 	public static void main(String[] args) {
 		File file = new File("C:/codecool/names.txt");
+		File output = new File("C:/codecool/output.txt");
 		List<Human> humanlist = readFromFile(file);
 		for (Human human : humanlist) {
 			System.out.println(human);
 		}
 		System.out.println(countUnique(humanlist));
-		Comparator c = new HumanComparator();
+		Comparator<Human> c = new HumanComparator();
 		humanlist.sort(c);
-		System.out.println(humanlist);
+		writeToFile(humanlist, output);
 	}
 
 }
